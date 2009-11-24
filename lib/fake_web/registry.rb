@@ -38,6 +38,18 @@ module FakeWeb
       next_responder.response(&block)
     end
 
+    def response_for(method, uri, &block)
+      responder = responder_for(method, uri)
+      return nil if responder.nil?
+      responder.response(&block)
+    end
+
+    def curl_response_for(method, uri, &block)
+      responder = responder_for(method, uri)
+      return nil if responder.nil?
+      responder.curl_response(&block)
+    end
+
 
     private
 
