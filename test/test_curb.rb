@@ -54,6 +54,7 @@ class TestCurb < Test::Unit::TestCase
     body = ""
     curl.perform
     assert_equal "example", body
+    assert_nil curl.body_str
   end
 
   def test_perform_raises_when_body_handler_returns_wrong_number
@@ -62,6 +63,7 @@ class TestCurb < Test::Unit::TestCase
     curl.on_body { |data| 0 }
     exception = assert_raise(Curl::Err::WriteError) { curl.perform }
     assert_equal "Failed writing received data to disk/application", exception.message
+    assert_nil curl.body_str
   end
 
   def test_perform_raises_when_body_handler_returns_non_number
@@ -71,7 +73,7 @@ class TestCurb < Test::Unit::TestCase
     warning, line = capture_stderr { curl.perform }, __LINE__
     assert warning.include? "test_curb.rb:#{line}: warning: Curl data handlers should return the number of bytes read as an Integer\n"
   end
-
+  
 end
 
 if RUBY_PLATFORM =~ /java/
