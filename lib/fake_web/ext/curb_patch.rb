@@ -33,7 +33,7 @@ if defined?(Curl::Easy)
 
       def perform_with_fakeweb
         if FakeWeb.registered_uri?(:get, url)
-          r = FakeWeb::Registry.instance.curl_response_for(:get, url)
+          r = FakeWeb::Registry.instance.response_for(:get, url, :curb)
           __process_body(r.body_str)
           true
         elsif FakeWeb.allow_net_connect?
