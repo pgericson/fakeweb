@@ -1,6 +1,10 @@
-fakeweb (development)
+fakeweb (1.2.8)
 
 * support Pathname objects where a filename is expected [Chris Kampmeier]
+
+* fix compatibility with Ruby 1.9.2 [Chris Kampmeier]
+
+* simplify storage of FakeWeb::VERSION [Josh Peek, Woody Peterson, Ben Woosley]
 
 
 fakeweb (1.2.7)

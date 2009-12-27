@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'rake'
 
-version = File.read("lib/fake_web/VERSION").strip
+version = '1.2.8'
 
 begin
   require 'jeweler'
@@ -16,11 +16,6 @@ begin
     gem.homepage = "http://github.com/chrisk/fakeweb"
     gem.add_development_dependency "mocha", ">= 0.9.5"
     gem.add_development_dependency "curb", ">= 0.5.9.1" unless RUBY_PLATFORM =~ /java/
-  end
-  Jeweler::GemcutterTasks.new
-  Jeweler::RubyforgeTasks.new do |rubyforge|
-    rubyforge.doc_task = "rdoc"
-    rubyforge.remote_doc_path = ""
   end
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
@@ -58,14 +53,16 @@ end
 
 
 begin
+  require 'sdoc'
   require 'rdoc/task'
   Rake::RDocTask.new do |rdoc|
     rdoc.main = "README.rdoc"
     rdoc.rdoc_files.include("README.rdoc", "CHANGELOG", "LICENSE.txt", "lib/*.rb")
     rdoc.title = "FakeWeb #{version} API Documentation"
-    rdoc.options << '--line-numbers' << '--charset' << 'utf-8'
+    rdoc.rdoc_dir = "doc"
+    rdoc.template = "direct"
+    rdoc.options << "--line-numbers" << "--show-hash" << "--charset=utf-8"
   end
 rescue LoadError
-  puts "\nIt looks like you're using an old version of RDoc, but FakeWeb requires a newer one."
-  puts "You can try upgrading with `gem install rdoc`.\n\n"
+  puts "SDoc (or a dependency) not available. Install it with: gem install sdoc"
 end
