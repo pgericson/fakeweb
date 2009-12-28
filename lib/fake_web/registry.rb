@@ -37,13 +37,8 @@ module FakeWeb
 
       next_responder.response(&block)
     end
-
-    def response_for(method, uri, extension = :net_http, &block)
-      return responder_for(method, uri)
-      #return nil if responder.nil?
-      #
-      #responder.response(&block)
-    end
+    
+    alias_method :response_for, :responder_for
 
     private
 
