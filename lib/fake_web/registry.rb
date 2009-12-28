@@ -38,16 +38,11 @@ module FakeWeb
       next_responder
     end
 
-    def response_for(method, uri, extension = :nethttp, &block)
-      responder = responder_for(method, uri)
-      return nil if responder.nil?
-      
-      case extension
-      when :nethttp
-        responder.response(&block)
-      when :curb
-       responder.curl_response(&block)   
-      end
+    def response_for(method, uri, extension = :net_http, &block)
+      return responder_for(method, uri)
+      #return nil if responder.nil?
+      #
+      #responder.response(&block)
     end
 
     private

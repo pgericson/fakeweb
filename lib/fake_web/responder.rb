@@ -15,8 +15,26 @@ module FakeWeb
         options[:body] = options.delete(:file) || options.delete(:string)
       end
     end
+    
+    def as_curl_response(&block)
+      if has_baked_response?
+        #No Baked ! TODO
+        response = baked_curl_response
+      else
+        code, msg = meta_information
+        response = Curl::Easy.new
+        response.instance_eval <<-END
+          def body_str
+            "#{body.gsub('"', '\"')}"
+          end
+        END
+      end
 
-    def response(&block)
+      optionally_raise(response)
+      response
+    end
+
+    def as_net_http_response(&block)
       if has_baked_response?
         response = baked_response
       else
@@ -36,31 +54,6 @@ module FakeWeb
       response
     end
 
-    def curl_response
-      if has_baked_response?
-        response = baked_curl_response
-      else
-        code, msg = meta_information
-        response = Curl::Easy.new
-        response.instance_eval <<-END
-          def body_str
-            "#{body.gsub('"', '\"')}"
-          end
-        END
-      end
-
-      optionally_raise(response)
-      response
-    end
-
-    private
-
-    def headers_extracted_from_options
-      options.reject {|name, _| KNOWN_OPTIONS.include?(name) }.map { |name, value|
-        [name.to_s.split("_").map { |segment| segment.capitalize }.join("-"), value]
-      }
-    end
-
     def body
       return '' unless options.has_key?(:body)
 
@@ -71,6 +64,14 @@ module FakeWeb
       else
         options[:body]
       end
+    end
+    
+    private
+
+    def headers_extracted_from_options
+      options.reject {|name, _| KNOWN_OPTIONS.include?(name) }.map { |name, value|
+        [name.to_s.split("_").map { |segment| segment.capitalize }.join("-"), value]
+      }
     end
 
     def baked_response
