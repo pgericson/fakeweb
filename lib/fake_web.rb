@@ -136,7 +136,8 @@ module FakeWeb
   # call-seq:
   #   FakeWeb.response_for(method, uri)
   #
-  # Returns the faked Net::HTTPResponse object associated with +method+ and +uri+.
+  # Returns a FakeWeb::Response that can be represented as a curl_response or a net_http_response
+  # associated with +method+ and +uri+.
   def self.response_for(*args, &block) #:nodoc: :yields: response
     case args.length
     when 2

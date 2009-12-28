@@ -22,12 +22,7 @@ module FakeWeb
         response = baked_curl_response
       else
         code, msg = meta_information
-        response = Curl::Easy.new
-        response.instance_eval <<-END
-          def body_str
-            "#{body.gsub('"', '\"')}"
-          end
-        END
+        response = { :body_str => "#{body.gsub('"', '\"')}", :header_str => "Lol"} 
       end
 
       optionally_raise(response)

@@ -51,6 +51,7 @@ class TestCurb < Test::Unit::TestCase
     curl.on_body { |data| body << data; data.length }
     curl.perform
     assert_equal "example", body
+    
     body = ""
     curl.perform
     assert_equal "example", body
