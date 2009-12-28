@@ -6,6 +6,7 @@ module FakeWeb
         if body_handler.nil?
           curb.body_str = body
         else
+          curb.on_body(&body_handler)
           handler_return_value = body_handler.call(body)
           
           if !handler_return_value.is_a?(Integer)
