@@ -1,52 +1,31 @@
 if defined?(Curl::Easy)
   require "fake_web/ext/curb/curb_extensions"
 
-  # TODO: I'm sure there's a better way to do this than a global
-  $reusable_instance = Curl::Easy.new("")
-
   module Curl
-    class Easy
-
-      class << self
-        def new_with_fakeweb(*args, &block)
-          obj = $reusable_instance.dup
-          obj.send :initialize, *args, &block
-          obj
-        end
-        alias_method :new_without_fakeweb, :new
-        alias_method :new, :new_with_fakeweb
-
-        def perform_with_fakeweb(url)
-          curl = new(url)
-          curl.perform
-          curl
-        end
-        alias_method :perform_without_fakeweb, :perform
-        alias_method :perform, :perform_with_fakeweb
-      end
-
-      attr_accessor :body_str
-
-      def initialize(url = nil, &block)
-        self.url = url
-        yield if block_given?
-      end
+    class Multi
 
       def perform_with_fakeweb
-        if FakeWeb.registered_uri?(:get, url)
-          r = FakeWeb.response_for(:get, url).as_curl_response
-          FakeWeb::CurbExtensions.process_body(self, r.body_str)
-          true
-        elsif FakeWeb.allow_net_connect?
-          perform_without_fakeweb
-        else
-          raise FakeWeb::NetConnectNotAllowedError,
-                "Real HTTP connections are disabled. Unregistered request: GET #{url}"
+        requests.each do |easy|
+          if FakeWeb.registered_uri?(:get, easy.url)
+            r = FakeWeb.response_for(:get, easy.url).as_curl_response
+            FakeWeb::CurbExtensions.process_body(easy, r[:body_str])
+          elsif FakeWeb.allow_net_connect?
+            perform_without_fakeweb
+          else
+            raise FakeWeb::NetConnectNotAllowedError,
+                  "Real HTTP connections are disabled. Unregistered request: GET #{easy.url}"
+          end          
         end
+        #Always return true
+        true
       end
       
       alias_method :perform_without_fakeweb, :perform
       alias_method :perform, :perform_with_fakeweb
+    end
+    
+    class Easy
+      attr_accessor :body_str, :header_str
     end
   end
 end
