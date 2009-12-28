@@ -49,7 +49,9 @@ class TestCurb < Test::Unit::TestCase
     curl = Curl::Easy.new("http://example.com")
     body = ""
     curl.on_body { |data| body << data; data.length }
+    #p curl.on_body
     curl.perform
+    #p curl.on_body
     assert_equal "example", body
    
     body = ""

@@ -6,6 +6,7 @@ if defined?(Curl::Easy)
 
       def perform_with_fakeweb
         requests.each do |easy|
+          
           if FakeWeb.registered_uri?(:get, easy.url)
             r = FakeWeb.response_for(:get, easy.url).as_curl_response
             FakeWeb::CurbExtensions.process_body(easy, r[:body_str])
@@ -15,6 +16,7 @@ if defined?(Curl::Easy)
             raise FakeWeb::NetConnectNotAllowedError,
                   "Real HTTP connections are disabled. Unregistered request: GET #{easy.url}"
           end
+          
           remove(easy)
         end
         
