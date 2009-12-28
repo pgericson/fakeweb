@@ -44,6 +44,7 @@ if defined?(Curl::Easy)
                 "Real HTTP connections are disabled. Unregistered request: GET #{url}"
         end
       end
+      
       alias_method :perform_without_fakeweb, :perform
       alias_method :perform, :perform_with_fakeweb
     end
