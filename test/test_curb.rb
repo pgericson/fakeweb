@@ -103,6 +103,17 @@ class TestCurb < Test::Unit::TestCase
     assert warning.include? "test_curb.rb:#{line}: warning: Curl data handlers should return the number of bytes read as an Integer\n"
   end
   
+  def test_on_complete_handler
+    FakeWeb.register_uri(:get, "http://example.com", :body => "example")
+    curl = Curl::Easy.new("http://example.com")
+    
+    msg = ""
+    curl.on_complete { |easy| msg << easy.body_str }
+  
+    curl.perform 
+    assert_equal "example", msg
+  end
+  
 end
 
 if RUBY_PLATFORM =~ /java/
