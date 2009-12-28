@@ -51,11 +51,39 @@ class TestCurb < Test::Unit::TestCase
     curl.on_body { |data| body << data; data.length }
     curl.perform
     assert_equal "example", body
-    
+   
     body = ""
     curl.perform
     assert_equal "example", body
     assert_nil curl.body_str
+  end
+  
+  def test_body_handler_is_preserved_with_multi
+    FakeWeb.register_uri(:get, "http://example.com", :body => "example")
+    FakeWeb.register_uri(:get, "http://foo.com", :body => "bar")
+
+    multi = Curl::Multi.new
+    
+    easy1 = Curl::Easy.new("http://example.com")
+    easy2 = Curl::Easy.new("http://foo.com")
+    
+    multi.add(easy1)
+    multi.add(easy2)
+    
+    assert_equal true, multi.perform
+    assert_equal "example", easy1.body_str
+    assert_equal "bar", easy2.body_str 
+  end
+  
+  def test_multi_requests_is_empty_after_perform
+    FakeWeb.register_uri(:get, "http://example.com", :body => "example")
+    multi = Curl::Multi.new
+    easy1 = Curl::Easy.new("http://example.com")
+    multi.add(easy1)
+
+    assert_equal 1, multi.requests.size
+    multi.perform
+    assert_equal 0, multi.requests.size
   end
 
   def test_perform_raises_when_body_handler_returns_wrong_number

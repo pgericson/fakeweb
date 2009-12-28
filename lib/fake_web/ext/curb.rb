@@ -14,8 +14,10 @@ if defined?(Curl::Easy)
           else
             raise FakeWeb::NetConnectNotAllowedError,
                   "Real HTTP connections are disabled. Unregistered request: GET #{easy.url}"
-          end          
+          end
+          remove(easy)
         end
+        
         #Always return true
         true
       end
