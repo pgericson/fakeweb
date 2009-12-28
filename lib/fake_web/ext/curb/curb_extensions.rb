@@ -16,6 +16,12 @@ module FakeWeb
             raise Curl::Err::WriteError, "Failed writing received data to disk/application"
           end
         end
+        
+        complete_handler = curb.on_complete
+
+        unless complete_handler.nil?
+          complete_handler.call(curb)
+        end
       end
   end
 end
