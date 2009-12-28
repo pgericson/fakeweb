@@ -7,6 +7,7 @@ module FakeWeb
           curb.body_str = body
         else
           handler_return_value = body_handler.call(body)
+          
           if !handler_return_value.is_a?(Integer)
             FakeWeb::Utility.rb_warn "Curl data handlers should return the number of bytes read as an Integer", caller[5]
           elsif handler_return_value != body.length
