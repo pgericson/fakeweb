@@ -1,14 +1,15 @@
 module FakeWeb
   module CurbExtensions
-      def self.process_body(curb, body)
+      def self.process(curb)
         body_handler = curb.on_body
         
-        if body_handler.nil?
-          curb.body_str = body
-        else
+        unless body_handler.nil?
+          #body_str must be nil when a body_handler is present
+          body, curb.body_str = curb.body_str, nil
+          
           curb.on_body(&body_handler)
           handler_return_value = body_handler.call(body)
-          
+        
           if !handler_return_value.is_a?(Integer)
             FakeWeb::Utility.rb_warn "Curl data handlers should return the number of bytes read as an Integer", caller[5]
           elsif handler_return_value != body.length
