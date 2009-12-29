@@ -114,6 +114,13 @@ class TestCurb < Test::Unit::TestCase
     assert_equal "example", msg
   end
   
+  def test_response_status
+    FakeWeb.register_uri(:get, "http://example.com", :body => "example", :status => [200, "OK"])
+    curl = Curl::Easy.new("http://example.com")
+    
+    curl.perform
+    assert_equal 200, curl.response_code
+  end
 end
 
 if RUBY_PLATFORM =~ /java/
