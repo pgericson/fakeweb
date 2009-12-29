@@ -18,11 +18,12 @@ module FakeWeb
     
     def as_curl_response(&block)
       if has_baked_response?
-        #No Baked ! TODO
         response = baked_curl_response
       else
         code, msg = meta_information
-        response = { :body_str => "#{body.gsub('"', '\"')}", :header_str => "Lol"} 
+        response = { :body_str => "#{body.gsub('"', '\"')}", :header_str => "Lol", :response_code => code } 
+
+        yield response if block_given?
       end
 
       optionally_raise(response)

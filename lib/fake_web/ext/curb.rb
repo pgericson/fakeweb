@@ -8,8 +8,13 @@ if defined?(Curl::Easy)
         requests.each do |easy|
           
           if FakeWeb.registered_uri?(:get, easy.url)
-            r = FakeWeb.response_for(:get, easy.url).as_curl_response
-            FakeWeb::CurbExtensions.process_body(easy, r[:body_str])
+            
+            FakeWeb.response_for(:get, easy.url).as_curl_response do |options|
+              easy.response_code = options[:response_code] if options[:response_code]
+              easy.body_str = options[:body_str] if options[:body_str]
+              easy.header_str = options[:header_str] if options[:header_str]
+            end
+            FakeWeb::CurbExtensions.process(easy)
           elsif FakeWeb.allow_net_connect?
             perform_without_fakeweb
           else
@@ -28,7 +33,7 @@ if defined?(Curl::Easy)
     end
     
     class Easy
-      attr_accessor :body_str, :header_str
+      attr_accessor :body_str, :header_str, :response_code
     end
   end
 end
