@@ -21,7 +21,7 @@ module FakeWeb
         response = baked_curl_response
       else
         code, msg = meta_information
-        response = { :body_str => "#{body.gsub('"', '\"')}", :header_str => "Lol", :response_code => code } 
+        response = { :body_str => "#{body.gsub('"', '\"')}", :header_str => "", :response_code => code } 
 
         yield response if block_given?
       end
@@ -70,6 +70,13 @@ module FakeWeb
       }
     end
 
+    #TODO
+    def baked_curl_response
+      if options[:response].is_a?(String) || (defined?(Pathname) && options[:response].is_a?(Pathname))
+        #p File.read(options[:response].to_s)
+      end      
+    end
+    
     def baked_response
       return options[:response] if options[:response].is_a?(Net::HTTPResponse)
 
