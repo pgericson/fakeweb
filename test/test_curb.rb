@@ -121,6 +121,14 @@ class TestCurb < Test::Unit::TestCase
     curl.perform
     assert_equal 200, curl.response_code
   end
+  
+  def x_test_passing_baked_response
+    FakeWeb.register_uri(:get, "http://example.com", :response => fixture_path("google_response_without_transfer_encoding"))
+     curl = Curl::Easy.new("http://example.com")
+
+     curl.perform
+     assert_equal 200, curl.response_code
+  end
 end
 
 if RUBY_PLATFORM =~ /java/
