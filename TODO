@@ -1,5 +1,6 @@
 Some ideas:
 
-- Separate FakeWeb from net/http, so adding curb might be easier and avoid a mess at the code (I believe that doing this, will make a clean interface to work with). A start would be creating different responders from each type i.e curb, net/http...
+- Separate FakeWeb from net/http, so adding curb might be easier and avoid a mess at the code (I believe that doing this, will make a clean interface to work with). A start would be creating different responders from each type i.e curb, net/http... 
 - Baked Response for Curb Calls
-- Think of a way or decide what handlers will be called (only on_body handler is treated now)
+- Think of a way or decide what handlers will be called (only on_body, on_complete handler are treated now)
+- A cool way to pass baked responses to FakeWeb Responders
