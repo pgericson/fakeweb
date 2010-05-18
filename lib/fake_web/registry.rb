@@ -22,7 +22,7 @@ module FakeWeb
       !responders_for(method, uri).empty?
     end
 
-    def response_for(method, uri, &block)
+    def responder_for(method, uri)
       responders = responders_for(method, uri)
       return nil if responders.empty?
 
@@ -35,7 +35,7 @@ module FakeWeb
         end
       end
 
-      next_responder.response(&block)
+      next_responder
     end
     
     alias_method :response_for, :responder_for
