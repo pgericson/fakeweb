@@ -24,6 +24,8 @@ Gem::Specification.new do |s|
      "Rakefile",
      "fakeweb.gemspec",
      "lib/fake_web.rb",
+     "lib/fake_web/ext/curb/curb_extensions.rb",
+     "lib/fake_web/ext/curb.rb",
      "lib/fake_web/ext/net_http.rb",
      "lib/fake_web/registry.rb",
      "lib/fake_web/responder.rb",
